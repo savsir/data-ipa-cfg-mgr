@@ -39,7 +39,7 @@
 #include <linux/netfilter/nfnetlink_compat.h>
 
 /* External Includes */
-#include <log/log.h>
+#include <cutils/log.h>
 #include <cstring>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -63,6 +63,8 @@ using ::std::vector;
 
 /* ------------------------------ PUBLIC ------------------------------------ */
 HAL* HAL::makeIPAHAL(int version, IOffloadManager* mgr) {
+    android::hardware::ProcessState::initWithMmapSize((size_t)(2 * KERNEL_PAGE));
+
     if (DBG)
         ALOGI("makeIPAHAL(%d, %s)", version,
                 (mgr != nullptr) ? "provided" : "null");
@@ -84,11 +86,11 @@ HAL::HAL(IOffloadManager* mgr) : mLogs("HAL Function Calls", 50) {
     mCbCt = nullptr;
 } /* HAL */
 
-void HAL::registerAsSystemService(const char* name__unused) {
+void HAL::registerAsSystemService(const char* name) {
     status_t ret = 0;
 
     ret = IOffloadControl::registerAsService();
-    if (ret != 0) ALOGE("Failed to register IOffloadControl (%d)", ret);
+    if (ret != 0) ALOGE("Failed to register IOffloadControl (%d) name(%s)", ret, name);
     else if (DBG) {
         ALOGI("Successfully registered IOffloadControl");
     }
