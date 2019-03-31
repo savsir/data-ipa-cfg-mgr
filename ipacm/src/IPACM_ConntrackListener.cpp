@@ -1,6 +1,7 @@
 /*
 Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -345,13 +346,10 @@ void IPACM_ConntrackListener::HandleNeighIpAddrDelEvt(
 void IPACM_ConntrackListener::TriggerWANUp(void *in_param)
 {
 	 ipacm_event_iface_up *wanup_data = (ipacm_event_iface_up *)in_param;
-	 uint8_t mux_id;
 
 	 IPACMDBG_H("Recevied below information during wanup,\n");
-	 IPACMDBG_H("if_name:%s, ipv4_address:0x%x mux_id:%d, xlat_mux_id:%d\n",
-						wanup_data->ifname, wanup_data->ipv4_addr,
-						wanup_data->mux_id,
-						wanup_data->xlat_mux_id);
+	 IPACMDBG_H("if_name:%s, ipv4_address:0x%x\n",
+						wanup_data->ifname, wanup_data->ipv4_addr);
 
 	 if(wanup_data->ipv4_addr == 0)
 	 {
@@ -376,11 +374,7 @@ void IPACM_ConntrackListener::TriggerWANUp(void *in_param)
 
 	 if(nat_inst != NULL)
 	 {
-		 if (wanup_data->mux_id == 0)
-		   mux_id = wanup_data->xlat_mux_id;
-		 else
-		   mux_id = wanup_data->mux_id;
-		 nat_inst->AddTable(wanup_data->ipv4_addr, mux_id);
+		 nat_inst->AddTable(wanup_data->ipv4_addr);
 	 }
 
 	 IPACMDBG("creating nat threads\n");
